@@ -4,7 +4,7 @@ TF.fmt=d=>d?String(d).slice(0,10).split('-').reverse().join('/'):'';
 TF.esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 TF.DISC=['Wonderware HMI','PLC Integration','OPC/Modbus Comms','SQL Historian','Site Survey/BOM','FAT/SAT QA','HSE Annexure-SCT-HR-001'];
 TF.PRI=['Critical','High','Standard','Low'];
-TF.COLS=[['backlog','Client Spec & Backlog',0],['assigned','Assigned & Scheduled',8],['progress','In Progress (SCADA / PLC / SQL)',6],['qa','QA / FAT Testing',4],['sat','Site Commissioning (SAT)',4],['closed','Client Handover & Closed',0]];
+TF.COLS=[['backlog','Client Spec & Backlog',0,'Waiting to be assigned.'],['assigned','Assigned & Scheduled',8,'Engineer and dates are set.'],['progress','In Progress (SCADA / PLC / SQL)',6,'Being worked on now.'],['qa','QA / FAT Testing',4,'Internal testing before the client sees it.'],['sat','Site Commissioning (SAT)',4,'On site with the client.'],['closed','Client Handover & Closed',0,'Delivered and accepted.']];
 TF.TEAMS=['SCADA & Wonderware HMI Team','PLC & Field Comms Team (OPC / Modbus / Telemetry)','Database & SQL Historian Team','Site Survey, Estimation & Commissioning Team','QA, Documentation & HSE Compliance Team'];
 TF.SITES=['Dubai Office','Jebel Ali','DEWA','ADNOC','Dubai Municipality'];
 TF.seed=()=>{const D=TF.DISC;
