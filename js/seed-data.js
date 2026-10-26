@@ -1,6 +1,9 @@
 (()=>{const TF=window.TF=window.TF||{};
 TF.ymd=o=>{const x=new Date();x.setDate(x.getDate()+o);return x.toISOString().slice(0,10)};
 TF.fmt=d=>d?String(d).slice(0,10).split('-').reverse().join('/'):'';
+TF.parseDate=v=>{const m=/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/.exec(String(v||'').trim());if(!m)return'';const d=new Date(Date.UTC(+m[3],+m[2]-1,+m[1]));return d.getUTCDate()===+m[1]&&d.getUTCMonth()===+m[2]-1?d.toISOString().slice(0,10):''};
+TF.dateField=(name,iso,attrs)=>`<input type="text" data-date name="${name}" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" size="10" title="Day/month/year, for example 26/10/2026" value="${TF.fmt(iso)}" ${attrs||''}>`;
+TF.bindDates=root=>root.querySelectorAll('input[data-date]').forEach(i=>{const c=()=>i.setCustomValidity(!i.value||TF.parseDate(i.value)?'':'Enter a real date as dd/mm/yyyy');i.addEventListener('input',c);c()});
 TF.esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 TF.DISC=['Wonderware HMI','PLC Integration','OPC/Modbus Comms','SQL Historian','Site Survey/BOM','FAT/SAT QA','HSE Annexure-SCT-HR-001'];
 TF.PRI=['Critical','High','Standard','Low'];

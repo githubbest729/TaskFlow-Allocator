@@ -1,9 +1,9 @@
 (()=>{const TF=window.TF,$=s=>document.querySelector(s),E=TF.esc,STG={backlog:0,assigned:15,progress:40,qa:70,sat:90,closed:100};
 TF.editClient=id=>{const s=TF.state,ex=id&&s.clients.find(c=>c.id===id),c=ex?{...ex}:{id:'R'+TF.uid(),clientName:'',projectCode:'',scope:'',deliveryDate:TF.ymd(30),signoffs:[],slaStatus:'On Track'},d=$('#dlg');
  d.innerHTML=`<form method="dialog" id="cf"><h3>${ex?'Edit':'Add'} client project</h3><div class="f"><label>Client<input name="n" required value="${E(c.clientName)}"></label><label>Project code<input name="p" required value="${E(c.projectCode)}"></label>
- <label class="w">Scope objective<textarea name="s" rows="2">${E(c.scope)}</textarea></label><label>Target delivery<input type="date" name="d" required value="${c.deliveryDate}"></label></div>
+ <label class="w">Scope objective<textarea name="s" rows="2">${E(c.scope)}</textarea></label><label>Target delivery${TF.dateField('d',c.deliveryDate,'required')}</label></div>
  <div class="tools"><button class="pri" value="ok">Save project</button><button value="x" formnovalidate>Cancel</button>${ex?'<button type="button" id="cdel">Delete project</button>':''}</div></form>`;
- $('#cf').addEventListener('submit',async e=>{if(!e.submitter||e.submitter.value!=='ok')return;const fd=new FormData(e.target);Object.assign(c,{clientName:fd.get('n'),projectCode:fd.get('p'),scope:fd.get('s'),deliveryDate:fd.get('d')});
+ TF.bindDates(d);$('#cf').addEventListener('submit',async e=>{if(!e.submitter||e.submitter.value!=='ok')return;const fd=new FormData(e.target);Object.assign(c,{clientName:fd.get('n'),projectCode:fd.get('p'),scope:fd.get('s'),deliveryDate:TF.parseDate(fd.get('d'))||c.deliveryDate});
   const i=s.clients.findIndex(x=>x.id===c.id);i<0?s.clients.push(c):s.clients[i]=c;await TF.mutate('client_requirements',c,i<0?'create':'update');TF.refresh()});
  if(ex)$('#cdel').onclick=async()=>{const n=s.tasks.filter(t=>t.clientId===c.id).length;if(n){TF.toast('Delete or reassign the '+n+' linked task(s) first');return}if(!confirm('Delete '+c.projectCode+'?'))return;await TF.remove('client_requirements',c.id,'delete');s.clients=s.clients.filter(x=>x.id!==c.id);d.close();TF.refresh()};
  d.showModal()};

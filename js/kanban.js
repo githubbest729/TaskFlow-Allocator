@@ -29,10 +29,10 @@ TF.renderKanban=()=>{const s=TF.state,o=(a,v,all)=>`<option value="">${all}</opt
  $('#view').innerHTML=`<div class="tools"><input id="fq" type="search" placeholder="Search tasks ( / )" value="${E(F.q)}" aria-label="Search tasks">
  <select id="fwho" aria-label="Engineer">${o(s.team.map(m=>[m.id,m.name]),F.who,'All engineers')}</select><select id="fdisc" aria-label="Discipline">${o(TF.DISC.map(d=>[d,d]),F.disc,'All disciplines')}</select>
  <select id="fcli" aria-label="Client">${o(s.clients.map(c=>[c.id,c.clientName+' '+c.projectCode]),F.cli,'All clients')}</select><select id="fpri" aria-label="Priority">${o(TF.PRI.map(d=>[d,d]),F.pri,'All priorities')}</select>
- <label><input id="fblk" type="checkbox" ${F.blk?'checked':''}> Blocked only</label><label>Due from <input id="ffrom" type="date" value="${F.from}"></label><label>to <input id="fto" type="date" value="${F.to}"></label><span id="fs"></span></div><div id="board" class="board"></div>`;
- const bind=(id,k,ev)=>$(id).addEventListener(ev||'input',e=>{F[k]=e.target.type==='checkbox'?e.target.checked:e.target.value;board()});
+ <label><input id="fblk" type="checkbox" ${F.blk?'checked':''}> Blocked only</label><label>Due from <input id="ffrom" data-date type="text" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" size="10" value="${TF.fmt(F.from)}"></label><label>to <input id="fto" data-date type="text" inputmode="numeric" placeholder="dd/mm/yyyy" maxlength="10" size="10" value="${TF.fmt(F.to)}"></label><span id="fs"></span></div><div id="board" class="board"></div>`;
+ const bind=(id,k,ev)=>$(id).addEventListener(ev||'input',e=>{F[k]=e.target.type==='checkbox'?e.target.checked:(k==='from'||k==='to'?TF.parseDate(e.target.value):e.target.value);board()});
  bind('#fq','q');bind('#fwho','who','change');bind('#fdisc','disc','change');bind('#fcli','cli','change');bind('#fpri','pri','change');bind('#fblk','blk','change');bind('#ffrom','from','change');bind('#fto','to','change');
- const b=$('#board');board();
+ TF.bindDates($('#view'));const b=$('#board');board();
  b.addEventListener('dragstart',e=>{const c=e.target.closest('.card');if(c)e.dataTransfer.setData('text/plain',c.dataset.id)});
  b.addEventListener('dragover',e=>{const c=e.target.closest('.col');if(c){e.preventDefault();c.classList.add('over')}});
  b.addEventListener('dragleave',e=>{const c=e.target.closest('.col');if(c)c.classList.remove('over')});
@@ -52,13 +52,13 @@ TF.openTask=(id,pre)=>{if(!TF.state.clients.length){TF.toast('Add a client proje
  <label>Smart allocator<button type="button" id="sg" title="Picks the engineer with matching skills, the lightest load and no schedule clash">Suggest best fit</button></label>
  <label>Priority<select name="priority">${sel(TF.PRI.map(x=>[x,x]),t.priority)}</select></label><label>Status<select name="status">${sel(TF.COLS.map(c=>[c[0],c[1]]),t.status)}</select></label>
  <label>Estimated hours<input type="number" min="0" name="estH" value="${t.estH}"></label><label>Actual hours<input type="number" min="0" name="actH" value="${t.actH}"></label>
- <label>Start<input type="date" name="startDate" value="${t.startDate}"></label><label>Due<input type="date" name="dueDate" value="${t.dueDate}"></label>
+ <label>Start${TF.dateField('startDate',t.startDate,'required')}</label><label>Due${TF.dateField('dueDate',t.dueDate,'required')}</label>
  <label><span><input type="checkbox" name="blocker" ${t.blocker?'checked':''}> Blocked</span></label><label><span><input type="checkbox" name="reqMet" ${t.reqMet?'checked':''}> Client requirement fulfilled</span></label>
  <label class="w">Notes<textarea name="notes" rows="2">${E(t.notes)}</textarea></label></div>
  <h4>Sub-tasks</h4><ul class="l">${t.subtasks.map((x,i)=>`<li><label><input type="checkbox" data-st="${i}" ${x.done?'checked':''}> ${E(x.t)}</label></li>`).join('')}</ul>
  <div class="tools"><input id="nst" placeholder="Add sub-task" aria-label="New sub-task"><button type="button" id="ast">Add</button></div>
  <div class="tools"><button class="pri" value="ok">Save task</button><button value="x" formnovalidate>Cancel</button>${ex?'<button type="button" id="del">Delete</button>':''}</div></form>`;
- const f=$('#tf');const sync=()=>{const fd=new FormData(f);for(const k of['title','clientId','discipline','assigneeId','priority','status','startDate','dueDate','notes'])t[k]=fd.get(k);t.estH=+fd.get('estH')||0;t.actH=+fd.get('actH')||0;t.blocker=fd.get('blocker')==='on';t.reqMet=fd.get('reqMet')==='on'};
+ const f=$('#tf');TF.bindDates(f);const sync=()=>{const fd=new FormData(f);for(const k of['title','clientId','discipline','assigneeId','priority','status','notes'])t[k]=fd.get(k);t.startDate=TF.parseDate(fd.get('startDate'))||t.startDate;t.dueDate=TF.parseDate(fd.get('dueDate'))||t.dueDate;t.estH=+fd.get('estH')||0;t.actH=+fd.get('actH')||0;t.blocker=fd.get('blocker')==='on';t.reqMet=fd.get('reqMet')==='on'};
  f.querySelectorAll('[data-st]').forEach(c=>c.addEventListener('change',()=>t.subtasks[c.dataset.st].done=c.checked));
  $('#sg').onclick=()=>{sync();const r=TF.suggest(t);t.assigneeId=r.m.id;draw();TF.toast('Suggested '+r.m.name+': '+r.why)};
  $('#ast').onclick=()=>{const v=$('#nst').value.trim();if(!v)return;sync();t.subtasks.push({t:v,done:false});draw()};
