@@ -1,6 +1,6 @@
 :root{--bg:#0b1120;--pan:#111a2e;--pan2:#17223a;--line:#27344f;--tx:#e6ecf7;--mu:#93a3bf;--am:#f5a524;--cy:#38bdf8;--rd:#f87171;--ok:#4ade80;--on:#1a1200;color-scheme:dark;box-sizing:border-box}
 [data-theme=light]{--bg:#eef2f7;--pan:#fff;--pan2:#f3f6fb;--line:#c9d3e3;--tx:#0f172a;--mu:#475569;--am:#b45309;--cy:#0369a1;--rd:#b91c1c;--ok:#15803d;--on:#fff;color-scheme:light}
-*,*::before,*::after{box-sizing:inherit}
+*,*::before,*::after{box-sizing:inherit}[hidden]{display:none!important}
 html,body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 Bahnschrift,"Segoe UI",system-ui,sans-serif;padding-top:env(safe-area-inset-top,0)}
 .skip{position:absolute;left:-999px}.skip:focus{left:8px;top:8px;background:var(--am);color:var(--on);padding:6px 10px;z-index:99}
 :focus-visible{outline:2px solid var(--cy);outline-offset:2px}

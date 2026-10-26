@@ -51,7 +51,7 @@ TF.openTask=(id,pre)=>{TF.valueEvent();const s=TF.state,ex=id&&s.tasks.find(x=>x
  <h4>Sub-tasks</h4><ul class="l">${t.subtasks.map((x,i)=>`<li><label><input type="checkbox" data-st="${i}" ${x.done?'checked':''}> ${E(x.t)}</label></li>`).join('')}</ul>
  <div class="tools"><input id="nst" placeholder="Add sub-task" aria-label="New sub-task"><button type="button" id="ast">Add</button></div>
  <div class="tools"><button class="pri" value="ok">Save task</button><button value="x" formnovalidate>Cancel</button>${ex?'<button type="button" id="del">Delete</button>':''}</div></form>`;
- const f=$('#tf');const sync=()=>{const fd=new FormData(f);for(const k of['title','clientId','discipline','assigneeId','priority','status','startDate','dueDate','notes'])t[k]=fd.get(k);t.estH=+fd.get('estH')||0;t.actH=+fd.get('actH')||0;t.blocker=f.blocker.checked;t.reqMet=f.reqMet.checked};
+ const f=$('#tf');const sync=()=>{const fd=new FormData(f);for(const k of['title','clientId','discipline','assigneeId','priority','status','startDate','dueDate','notes'])t[k]=fd.get(k);t.estH=+fd.get('estH')||0;t.actH=+fd.get('actH')||0;t.blocker=fd.get('blocker')==='on';t.reqMet=fd.get('reqMet')==='on'};
  f.querySelectorAll('[data-st]').forEach(c=>c.addEventListener('change',()=>t.subtasks[c.dataset.st].done=c.checked));
  $('#sg').onclick=()=>{sync();const m=TF.suggest(t.discipline);t.assigneeId=m.id;draw();TF.toast('Suggested '+m.name+': skill match and lowest load')};
  $('#ast').onclick=()=>{const v=$('#nst').value.trim();if(!v)return;sync();t.subtasks.push({t:v,done:false});draw()};
