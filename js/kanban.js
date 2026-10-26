@@ -10,7 +10,11 @@ TF.move=async(id,st)=>{const t=TF.state.tasks.find(x=>x.id===id);if(!t||t.status
  await TF.mutate('tasks',t,'move:'+st,t.id);TF.valueEvent();TF.refresh()};
 TF.saveTask=async t=>{t.updatedAt=new Date().toISOString();if(t.status==='closed'&&!t.closedAt)t.closedAt=t.updatedAt;
  const i=TF.state.tasks.findIndex(x=>x.id===t.id);i<0?TF.state.tasks.push(t):TF.state.tasks[i]=t;await TF.mutate('tasks',t,i<0?'create':'update',t.id);TF.refresh()};
-TF.suggest=(disc)=>{const rows=TF.state.team.map(m=>({m,skill:m.skills.includes(disc)?0:1,u:TF.util(m).pct})).sort((a,b)=>a.skill-b.skill||a.u-b.u);return rows[0]&&rows[0].m};
+TF.suggest=t=>{const hi=t.priority==='Critical'||t.priority==='High';
+ const rows=TF.state.team.filter(m=>m.availability!=='away').map(m=>{const mine=TF.state.tasks.filter(x=>x.assigneeId===m.id&&x.id!==t.id&&x.status!=='closed'&&!x.archived),cap=m.hours+(TF.state.sat?8:0),a=mine.reduce((z,x)=>z+Math.max(x.estH-x.actH,0),0),cur=Math.round(a/cap*100),proj=Math.round((a+Math.max(t.estH-t.actH,0))/cap*100),
+  cf=hi?mine.filter(x=>(x.priority==='Critical'||x.priority==='High')&&x.startDate<=t.dueDate&&t.startDate<=x.dueDate).length:0,sk=m.skills.includes(t.discipline)?0:1;
+  return{m,cur,proj,cf,sk,score:sk*1000+cf*300+Math.max(proj-100,0)*5+proj}}).sort((a,b)=>a.score-b.score);
+ const r=rows[0];r.why=(r.sk?'no skill match':'skill match')+', load '+r.cur+'% to '+r.proj+'%'+(r.cf?', '+r.cf+' overlapping high-priority task(s)':', no schedule clash');return r};
 const board=()=>{const s=TF.state,el=$('#board');if(!el)return;const list=s.tasks.filter(t=>!t.archived&&TF.match(t));
  el.innerHTML=TF.COLS.map(([k,n,lim],ci)=>{const ts=list.filter(t=>t.status===k),warn=lim&&ts.length>lim;
  return`<section class="col${warn?' wip':''}" data-s="${k}" aria-label="${E(n)}"><h3><span>${E(n)}</span><span>${ts.length}${lim?'/'+lim:''}${warn?' over WIP limit':''}</span></h3><div class="cards">`+ts.map(t=>{const c=TF.client(t.clientId),m=TF.member(t.assigneeId),[cd,cc]=TF.countdown(t);
@@ -32,7 +36,7 @@ TF.renderKanban=()=>{const s=TF.state,o=(a,v,all)=>`<option value="">${all}</opt
  b.addEventListener('dragleave',e=>{const c=e.target.closest('.col');if(c)c.classList.remove('over')});
  b.addEventListener('drop',e=>{const c=e.target.closest('.col');if(c){e.preventDefault();TF.move(e.dataTransfer.getData('text/plain'),c.dataset.s)}});
  b.addEventListener('click',e=>{const m=e.target.closest('[data-mv]');if(m){const t=s.tasks.find(x=>x.id===m.dataset.mv),i=TF.COLS.findIndex(c=>c[0]===t.status)+ +m.dataset.d;TF.move(t.id,TF.COLS[i][0]);return}
-  const o=e.target.closest('[data-open]');if(o)TF.openTask(o.dataset.open)});
+  const o=e.target.closest('.card');if(o)TF.openTask(o.dataset.id)});
  b.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.dataset.open)TF.openTask(e.target.dataset.open)})};
 TF.openTask=(id,pre)=>{TF.valueEvent();const s=TF.state,ex=id&&s.tasks.find(x=>x.id===id);const n=s.tasks.reduce((a,t)=>Math.max(a,+t.id.split('-')[2]||0),1040)+1;
  const t=ex?JSON.parse(JSON.stringify(ex)):{id:'AGAC-TSK-'+n,title:'',clientId:s.clients[0].id,assigneeId:'',discipline:TF.DISC[0],priority:'Standard',status:'backlog',estH:8,actH:0,startDate:TF.ymd(0),dueDate:TF.ymd(7),blocker:false,reqMet:false,subtasks:[],notes:'',archived:false,...(pre||{})};
@@ -53,9 +57,9 @@ TF.openTask=(id,pre)=>{TF.valueEvent();const s=TF.state,ex=id&&s.tasks.find(x=>x
  <div class="tools"><button class="pri" value="ok">Save task</button><button value="x" formnovalidate>Cancel</button>${ex?'<button type="button" id="del">Delete</button>':''}</div></form>`;
  const f=$('#tf');const sync=()=>{const fd=new FormData(f);for(const k of['title','clientId','discipline','assigneeId','priority','status','startDate','dueDate','notes'])t[k]=fd.get(k);t.estH=+fd.get('estH')||0;t.actH=+fd.get('actH')||0;t.blocker=fd.get('blocker')==='on';t.reqMet=fd.get('reqMet')==='on'};
  f.querySelectorAll('[data-st]').forEach(c=>c.addEventListener('change',()=>t.subtasks[c.dataset.st].done=c.checked));
- $('#sg').onclick=()=>{sync();const m=TF.suggest(t.discipline);t.assigneeId=m.id;draw();TF.toast('Suggested '+m.name+': skill match and lowest load')};
+ $('#sg').onclick=()=>{sync();const r=TF.suggest(t);t.assigneeId=r.m.id;draw();TF.toast('Suggested '+r.m.name+': '+r.why)};
  $('#ast').onclick=()=>{const v=$('#nst').value.trim();if(!v)return;sync();t.subtasks.push({t:v,done:false});draw()};
- if(ex)$('#del').onclick=async()=>{await TF.db.del('tasks',t.id);s.tasks=s.tasks.filter(x=>x.id!==t.id);d.close();TF.refresh()};
+ if(ex)$('#del').onclick=async()=>{if(!confirm('Delete '+t.id+'? This cannot be undone.'))return;await TF.db.del('tasks',t.id);s.tasks=s.tasks.filter(x=>x.id!==t.id);d.close();TF.refresh()};
  f.addEventListener('submit',async e=>{if(e.submitter&&e.submitter.value==='ok'){sync();await TF.saveTask(t)}})};
  draw();d.showModal()};
 })();

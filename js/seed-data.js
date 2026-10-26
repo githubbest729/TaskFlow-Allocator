@@ -1,5 +1,6 @@
 (()=>{const TF=window.TF=window.TF||{};
 TF.ymd=o=>{const x=new Date();x.setDate(x.getDate()+o);return x.toISOString().slice(0,10)};
+TF.fmt=d=>d?String(d).slice(0,10).split('-').reverse().join('/'):'';
 TF.esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 TF.DISC=['Wonderware HMI','PLC Integration','OPC/Modbus Comms','SQL Historian','Site Survey/BOM','FAT/SAT QA','HSE Annexure-SCT-HR-001'];
 TF.PRI=['Critical','High','Standard','Low'];

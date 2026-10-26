@@ -3,10 +3,10 @@ TF.toast=(m,act,fn)=>{const t=$('#toast');t.innerHTML='';t.append(m);if(act){con
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();ev=e;if(n>=2)reveal()});
 const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone;
 const ios=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)&&!standalone();
-function reveal(){if(shown||standalone())return;
+function reveal(){try{if(localStorage.getItem('tf-nobanner'))return}catch(_){}if(shown||standalone())return;
  if(ev){shown=true;$('#bInstall').hidden=false;banner('Install TaskFlow for offline use and a home-screen icon.','Install',async()=>{ev.prompt();await ev.userChoice;ev=null;$('#bInstall').hidden=true;$('#banner').hidden=true})}
  else if(ios()){shown=true;banner('To install on iPhone or iPad: tap Share, then Add to Home Screen.','Got it',()=>{$('#banner').hidden=true})}}
-function banner(msg,label,fn){const b=$('#banner');b.hidden=false;b.innerHTML=`<span>${msg}</span><span><button class="pri" id="bOk">${label}</button> <button id="bNo">Not now</button></span>`;$('#bOk').onclick=fn;$('#bNo').onclick=()=>b.hidden=true}
+function banner(msg,label,fn){const b=$('#banner');b.hidden=false;b.innerHTML=`<span>${msg}</span><span><button class="pri" id="bOk">${label}</button> <button id="bNo">Not now</button></span>`;$('#bOk').onclick=fn;$('#bNo').onclick=()=>{b.hidden=true;try{localStorage.setItem('tf-nobanner','1')}catch(_){}}}
 TF.valueEvent=()=>{n++;if(n>=2)reveal()};
 $('#bInstall').onclick=async()=>{if(ev){ev.prompt();await ev.userChoice;ev=null;$('#bInstall').hidden=true}};
 TF.badge=async c=>{try{if(navigator.setAppBadge)c?await navigator.setAppBadge(c):await navigator.clearAppBadge()}catch(_){}};
