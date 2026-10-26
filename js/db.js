@@ -16,6 +16,8 @@ TF.mutate=async(store,val,action,taskId)=>{await TF.db.put(store,val);
  TF.autoBackup()};
 const gz=async s=>{if(!window.CompressionStream)return s;const b=new Blob([s]).stream().pipeThrough(new CompressionStream('gzip'));return new Response(b).blob()};
 const ungz=async v=>{if(typeof v==='string')return v;return new Response(v.stream().pipeThrough(new DecompressionStream('gzip'))).text()};
+TF.archiveOne=async t=>{await TF.db.put('archived_records',{id:t.id,archivedAt:new Date().toISOString(),title:t.title,clientId:t.clientId,blob:await gz(JSON.stringify(t))});await TF.db.del('tasks',t.id)};
+TF.remove=async(store,id,action)=>{await TF.db.del(store,id);await TF.db.put('audit_history',{id:TF.uid(),timestamp:new Date().toISOString(),taskId:id,actionType:action,store});TF.autoBackup()};
 TF.archive=async days=>{const lim=Date.now()-days*864e5,ts=await TF.db.all('tasks');let n=0;
  for(const t of ts){if(t.status==='closed'&&t.closedAt&&new Date(t.closedAt).getTime()<lim){
   await TF.db.put('archived_records',{id:t.id,archivedAt:new Date().toISOString(),title:t.title,clientId:t.clientId,blob:await gz(JSON.stringify(t))});await TF.db.del('tasks',t.id);n++}}return n};

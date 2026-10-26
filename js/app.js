@@ -30,7 +30,7 @@ TF.importFile=async f=>{try{const o=JSON.parse(await f.text());if(o.app!=='taskf
 const boot=async()=>{await TF.db.open();if(!(await TF.db.count('tasks'))&&!(await TF.db.count('archived_records'))){const d=TF.seed();for(const[k,s]of[['team','team_members'],['clients','client_requirements'],['tasks','tasks'],['events','schedule_events']])await TF.db.putMany(s,d[k])}
  await load();const p=await TF.db.get('settings_meta','prefs').catch(()=>null);if(p)Object.assign(TF.state,{sat:p.sat,theme:p.theme,archiveDays:p.archiveDays});document.documentElement.dataset.theme=TF.state.theme;
  await TF.loadHandle();TF.persist();TF.registerSW();
- document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>go(b.dataset.v));$('#bNew').onclick=()=>TF.openTask();$('#bStore').onclick=TF.drawer;
+ document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>go(b.dataset.v));$('#bNew').onclick=()=>TF.openTask();$('#bStore').onclick=TF.drawer;$('#mn .menu').addEventListener('click',()=>{$('#mn').open=false});
  $('#bTheme').onclick=async()=>{TF.state.theme=TF.state.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=TF.state.theme;await TF.savePrefs()};
  addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||$('#dlg').open)return;
   if(e.key==='n'||e.key==='N'){e.preventDefault();TF.openTask()}else if('1234'.includes(e.key)&&e.key){go(['kanban','team','schedule','clients'][+e.key-1])}else if(e.key==='/'){e.preventDefault();go('kanban');$('#fq').focus()}});
