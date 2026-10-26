@@ -1,0 +1,172 @@
+{
+ "id": "/taskflow-allocator-agac-pwa",
+ "name": "TaskFlow Allocator \u2014 Al Gurg SCADA Engineering",
+ "short_name": "TaskFlow",
+ "description": "Task assignment, schedule management and client SLA tracking for SCADA engineering teams.",
+ "start_url": "./index.html?source=pwa",
+ "scope": "./",
+ "display": "standalone",
+ "display_override": [
+  "window-controls-overlay",
+  "standalone",
+  "minimal-ui"
+ ],
+ "prefer_related_applications": false,
+ "theme_color": "#0f172a",
+ "background_color": "#0b1120",
+ "orientation": "any",
+ "launch_handler": {
+  "client_mode": [
+   "navigate-existing",
+   "auto"
+  ]
+ },
+ "icons": [
+  {
+   "src": "icons/icon-72.png",
+   "sizes": "72x72",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-96.png",
+   "sizes": "96x96",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-128.png",
+   "sizes": "128x128",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-144.png",
+   "sizes": "144x144",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-152.png",
+   "sizes": "152x152",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-384.png",
+   "sizes": "384x384",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-maskable-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "favicon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml",
+   "purpose": "any"
+  }
+ ],
+ "screenshots": [
+  {
+   "src": "screenshots/screenshot-wide.png",
+   "sizes": "1280x720",
+   "type": "image/png",
+   "form_factor": "wide",
+   "label": "Kanban board and schedule"
+  },
+  {
+   "src": "screenshots/screenshot-narrow.png",
+   "sizes": "720x1280",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "Mobile task allocator"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "+ Assign New Task",
+   "short_name": "New task",
+   "url": "./index.html?action=new",
+   "icons": [
+    {
+     "src": "icons/shortcut-new-task.png",
+     "sizes": "96x96",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Engineering Kanban",
+   "short_name": "Kanban",
+   "url": "./index.html?view=kanban",
+   "icons": [
+    {
+     "src": "icons/shortcut-kanban.png",
+     "sizes": "96x96",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Team Schedule & SLA",
+   "short_name": "Schedule",
+   "url": "./index.html?view=schedule",
+   "icons": [
+    {
+     "src": "icons/shortcut-schedule.png",
+     "sizes": "96x96",
+     "type": "image/png"
+    }
+   ]
+  }
+ ],
+ "share_target": {
+  "action": "./index.html",
+  "method": "GET",
+  "params": {
+   "title": "title",
+   "text": "text",
+   "url": "url"
+  }
+ },
+ "file_handlers": [
+  {
+   "action": "./index.html",
+   "accept": {
+    "application/json": [
+     ".taskflow",
+     ".json"
+    ]
+   }
+  }
+ ],
+ "protocol_handlers": [
+  {
+   "protocol": "web+taskflow",
+   "url": "./index.html?task=%s"
+  }
+ ]
+}

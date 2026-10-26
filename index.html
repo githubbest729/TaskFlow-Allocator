@@ -1,0 +1,16 @@
+<!doctype html><html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>TaskFlow Allocator — Al Gurg SCADA Engineering</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="TaskFlow">
+<link rel="icon" href="favicon.ico" sizes="any"><link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="stylesheet" href="css/styles.css"></head>
+<body><a class="skip" href="#view">Skip to content</a>
+<header id="bar"><div class="brand"><img src="assets/agac-badge.svg" alt="" width="28" height="28"><b>TaskFlow Allocator</b><span>Al Gurg Automation and Controls, Dubai</span></div>
+<div class="acts"><button id="bNew" class="pri">+ Assign task</button><button id="bInstall" hidden>Install app</button><button id="bStore">Storage</button><button id="bBell" aria-label="Enable alerts">Alerts</button><button id="bTheme" aria-label="Toggle light or dark theme">Theme</button></div></header>
+<section id="kpis" aria-live="polite"></section>
+<nav id="tabs" role="tablist" aria-label="Views"><button data-v="kanban" role="tab">1 Kanban</button><button data-v="team" role="tab">2 Team load</button><button data-v="schedule" role="tab">3 Schedule</button><button data-v="clients" role="tab">4 Client needs</button></nav>
+<main id="view" tabindex="-1"></main>
+<dialog id="dlg"></dialog><aside id="drawer" hidden></aside><div id="toast" role="status"></div><div id="banner" hidden></div>
+<script src="js/db.js"></script><script src="js/seed-data.js"></script><script src="js/kanban.js"></script><script src="js/scheduler.js"></script><script src="js/clients.js"></script><script src="js/pwa-features.js"></script><script src="js/app.js"></script></body></html>
