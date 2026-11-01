@@ -22,14 +22,13 @@
   <img src="https://img.shields.io/badge/Storage-IndexedDB%20Persistent-10b981?style=flat-square" alt="Storage">
   <img src="https://img.shields.io/badge/Offline-Service%20Worker%20v1-f59e0b?style=flat-square" alt="Offline Ready">
   <img src="https://img.shields.io/badge/Accessibility-WCAG%202.2%20AA-6366f1?style=flat-square" alt="Accessibility">
-  <img src="https://img.shields.io/badge/Context-Al%20Gurg%20Dubai-059669?style=flat-square" alt="Context">
 </p>
 
 ---
 
 ## 📌 1. Project Purpose & Operational Scope
 
-**TaskFlow Allocator** directly executes **Job Responsibility #19** for the SCADA Engineering department at **Al Gurg Automation and Controls (Dubai, U.A.E.)**:
+**TaskFlow Allocator** directly executes **Job Responsibility #19** for the SCADA Engineering department at ** (Dubai, U.A.E.)**:
 > *"Assign tasks to internal teams and assist with schedule management. Make sure that clients’ needs are met."*
 
 The application bridges contractual project deliverables from major UAE public utilities and industrial clients (such as **DEWA**, **ADNOC**, **Dubai Municipality**, and **JAFZA**) directly to internal technical discipline engineering teams, providing proactive capacity balancing, schedule conflict prevention, and SLA milestone verification.
@@ -224,5 +223,5 @@ Open `http://localhost:8080` in Chrome, Edge, or Safari.
 ---
 
 ## 🛡️ 8. Operational Compliance References
-* **QHSE Guidelines**: Conforms to Al Gurg Annexure-SCT-HR-001 documentation requirements.
+* **QHSE Guidelines**: Conforms to  Annexure-SCT-HR-001 documentation requirements.
 * **SCADA Ecosystem Compatibility**: Wonderware System Platform / InTouch, Schneider Electric, Siemens TIA Portal, Rockwell ControlLogix, Modbus TCP/RTU, and OPC UA standard communication protocols.
