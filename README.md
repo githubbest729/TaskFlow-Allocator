@@ -1,25 +1,8 @@
-TaskFlow Allocator — Engineering Task Assignment & Kanban Board
-
-SVG
-📌 Executive Summary
-TaskFlow Allocator fulfills Job Responsibility #19 ("Assign tasks to internal teams and assist with schedule management. Make sure that clients’ needs are met").
-The platform translates high-level contractual client deliverables across major UAE industrial utilities (DEWA, ADNOC, Dubai Municipality, JAFZA) into granular engineering assignments, balances department workload against regional workweeks, and tracks SLA fulfillment on an interactive Gantt timeline and Kanban board.
-
-
-
-┌─────────────────┐       ┌──────────────────────┐       ┌──────────────────┐       ┌─────────────────┐
+📌 Executive SummaryTaskFlow Allocator fulfills Job Responsibility #19 ("Assign tasks to internal teams and assist with schedule management. Make sure that clients’ needs are met").The platform translates high-level contractual client deliverables across major UAE industrial utilities (DEWA, ADNOC, Dubai Municipality, JAFZA) into granular engineering assignments, balances department workload against regional workweeks, and tracks SLA fulfillment on an interactive Gantt timeline and Kanban board.┌─────────────────┐       ┌──────────────────────┐       ┌──────────────────┐       ┌─────────────────┐
 │ 4. Client Needs │ ───▶  │  + Assign New Task   │ ───▶  │ 2. Team Load     │ ───▶  │ 1. Kanban Board │
 │ (SLA & Specs)   │       │ (Smart Auto-Matcher) │       │ (Capacity Matrix)│       │ & 3. Schedule   │
 └─────────────────┘       └──────────────────────┘       └──────────────────┘       └─────────────────┘
-
-
-🏗 System Architecture
-The application is structured as a decoupled, client-side offline-first Single Page Application (SPA/PWA) driven by a transactional IndexedDB persistence layer and hardware-accelerated UI modules.
-
-
-
-Code snippet
-graph TB
+🏗 System ArchitectureThe application is structured as a decoupled, client-side offline-first Single Page Application (SPA/PWA) driven by a transactional IndexedDB persistence layer and hardware-accelerated UI modules.Code snippetgraph TB
     subgraph ClientLayer ["Client Presentation & PWA Shell"]
         UI_Header["Executive KPI Header Bar<br/>(Adherence, Capacity, Blockers, SLAs)"]
         Tab1["1. Kanban Engine<br/>(HTML5 Drag & Drop, Filters, WIP Limits)"]
@@ -76,48 +59,7 @@ graph TB
     SW <--> StaticRouting
     SW <--> PushBadge
     AppController <--> SW
-
-
-🚀 Key Modules & Engineering Features
-1. Interactive Engineering Kanban Board
-6 Execution Stages: Client Spec & Backlog, Assigned & Scheduled, In Progress (SCADA / PLC / SQL), QA / FAT Testing, Site Commissioning (SAT), Client Handover & Closed.
-Field Automation Tags: Specialized categorization for Wonderware HMI, PLC Integration, OPC/Modbus Comms, SQL Historian, Site Survey/BOM, and HSE Annexure-SCT-HR-001.
-Telemetry Indicators: Real-time remaining hours, countdown to deadline, blocked state tags, and single-click card movement triggers.
-2. Team Allocation & Capacity Matrix
-Al Gurg Sub-Teams: SCADA & HMI, PLC & Field Comms, Database/Historian, Site Survey & Commissioning, and QA/Documentation/HSE.
-UAE Workweek Engine: Configured for 40h standard working weeks (Monday–Friday) with dynamic Saturday Site Shift (+8h) toggle.
-Over-Capacity Alarms: Visual indicators trigger red alert states when assigned hours exceed weekly capacity (e.g., >100%).
-3. Schedule Management & Site Roster
-Gantt Timeline: View engineering assignments across Day, Week, Month, and Milestones.
-Site Deployment Tracking: Track engineer rotations between Dubai Central Office and customer locations (DEWA Substation, JAFZA Pump Station, Dubai Municipality STP, ADNOC Terminals).
-Bulk Milestone Adjustment: Shift dependent dates backward or forward with automated timeline recalculation.
-4. Client Requirement & SLA Alignment
-Direct mapping between contract milestones and operational engineering tasks.
-Visual SLA progress meters (On Track, At Risk, Fulfilled).
-Formal audit trail with client sign-off acceptance logging.
-💾 2–3 Year Heavy-Usage Storage Architecture
-To guarantee high-speed operation (<16ms frame render) over 36 months of heavy project assignments:
-Feature
-Technical Implementation
-Purpose
-Durable Storage
-navigator.storage.persist()
-Prevents browser eviction of offline records under device storage pressure.
-Cold Compaction
-Automated partitioning to archived_records
-Closed tasks past 90/180 days are stored compressed, keeping active query indexes lightweight.
-Storage Telemetry
-navigator.storage.estimate()
-Live dashboard meter tracking used megabytes, total quota, and projected runway.
-Desktop Local Sync
-File System Access API (showSaveFilePicker)
-Direct disk binding to .taskflow.json for one-click local workstation backup.
-
-📂 Repository File Structure
-
-
-
-taskflow-allocator/
+🚀 Key Modules & Engineering Features1. Interactive Engineering Kanban Board6 Execution Stages: Client Spec & Backlog, Assigned & Scheduled, In Progress (SCADA / PLC / SQL), QA / FAT Testing, Site Commissioning (SAT), Client Handover & Closed.Field Automation Tags: Specialized categorization for Wonderware HMI, PLC Integration, OPC/Modbus Comms, SQL Historian, Site Survey/BOM, and HSE Annexure-SCT-HR-001.Telemetry Indicators: Real-time remaining hours, countdown to deadline, blocked state tags, and single-click card movement triggers.2. Team Allocation & Capacity MatrixAl Gurg Sub-Teams: SCADA & HMI, PLC & Field Comms, Database/Historian, Site Survey & Commissioning, and QA/Documentation/HSE.UAE Workweek Engine: Configured for 40h standard working weeks (Monday–Friday) with dynamic Saturday Site Shift (+8h) toggle.Over-Capacity Alarms: Visual indicators trigger red alert states when assigned hours exceed weekly capacity (e.g., >100%).3. Schedule Management & Site RosterGantt Timeline: View engineering assignments across Day, Week, Month, and Milestones.Site Deployment Tracking: Track engineer rotations between Dubai Central Office and customer locations (DEWA Substation, JAFZA Pump Station, Dubai Municipality STP, ADNOC Terminals).Bulk Milestone Adjustment: Shift dependent dates backward or forward with automated timeline recalculation.4. Client Requirement & SLA AlignmentDirect mapping between contract milestones and operational engineering tasks.Visual SLA progress meters (On Track, At Risk, Fulfilled).Formal audit trail with client sign-off acceptance logging.💾 2–3 Year Heavy-Usage Storage ArchitectureTo guarantee high-speed operation (<16ms frame render) over 36 months of heavy project assignments:FeatureTechnical ImplementationPurposeDurable Storagenavigator.storage.persist()Prevents browser eviction of offline records under device storage pressure.Cold CompactionAutomated partitioning to archived_recordsClosed tasks past 90/180 days are stored compressed, keeping active query indexes lightweight.Storage Telemetrynavigator.storage.estimate()Live dashboard meter tracking used megabytes, total quota, and projected runway.Desktop Local SyncFile System Access API (showSaveFilePicker)Direct disk binding to .taskflow.json for one-click local workstation backup.📂 Repository File Structuretaskflow-allocator/
 ├── index.html                  # Main application shell & view containers
 ├── manifest.webmanifest        # W3C PWA installation manifest & app shortcuts
 ├── sw.js                       # 2026 Service worker (cache strategies, sync, static routing)
@@ -140,44 +82,10 @@ taskflow-allocator/
 ├── screenshots/                # Rich install prompts (wide & narrow viewport previews)
 └── .well-known/
     └── assetlinks.json         # Android Digital Asset Links verification
-
-
-🛠 Local Setup & Development
-Because this app utilizes modern Service Workers and the Storage Foundation API, it must be served in a secure context (https:// or localhost).
-Option 1: Python Local Server
-
-
-
-Bash
-# Clone the repository
+🛠 Local Setup & DevelopmentBecause this app utilizes modern Service Workers and the Storage Foundation API, it must be served in a secure context (https:// or localhost).Option 1: Python Local ServerBash# Clone the repository
 git clone https://github.com/githubbest729/TaskFlow-Allocator.git
 cd TaskFlow-Allocator
 
 # Start a local HTTP server
 python3 -m http.server 8080
-
-
-Visit http://localhost:8080 in Chrome, Edge, or Safari.
-Option 2: Live Deployment
-The project is configured for continuous deployment on GitHub Pages:Live URL: [https://githubbest729.github.io/TaskFlow-Allocator/](https://githubbest729.github.io/TaskFlow-Allocator/)
-⌨️ Keyboard Shortcuts
-Shortcut
-Action
-N
-Open + Assign Task Modal
-1
-Switch to Kanban Board
-2
-Switch to Team Load Matrix
-3
-Switch to Schedule / Gantt
-4
-Switch to Client Needs Tracker
-/
-Focus global task search bar
-Esc
-Close active modal dialog or drawer
-
-📋 Compliance & Operational Reference
-HSE Standard: Al Gurg QHSE Policy Annexure-SCT-HR-001.
-Platforms: Wonderware System Platform, InTouch HMI, Siemens TIA Portal, Allen-Bradley ControlLogix, Modbus TCP/RTU, OPC Unified Architecture (OPC UA).
+Visit http://localhost:8080 in Chrome, Edge, or Safari.Option 2: Live DeploymentThe project is configured for continuous deployment on GitHub Pages:Live URL: [https://githubbest729.github.io/TaskFlow-Allocator/](https://githubbest729.github.io/TaskFlow-Allocator/)⌨️ Keyboard ShortcutsShortcutActionNOpen + Assign Task Modal1Switch to Kanban Board2Switch to Team Load Matrix3Switch to Schedule / Gantt4Switch to Client Needs Tracker/Focus global task search barEscClose active modal dialog or drawer📋 Compliance & Operational ReferenceHSE Standard: Al Gurg QHSE Policy Annexure-SCT-HR-001.Platforms: Wonderware System Platform, InTouch HMI, Siemens TIA Portal, Allen-Bradley ControlLogix, Modbus TCP/RTU, OPC Unified Architecture (OPC UA).
